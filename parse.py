@@ -51,15 +51,48 @@ class Chart:
 			self.chart[column_idx+1].append(new_entry)
 
 
-def read_grammar(file):
-	return R, P
+def read_grammar(gr_file):
+    R = {}
+    P = {}
 
-def get_S(word):
-	return S
+    grammar = open(gr_file)
+    grammar = grammar.readlines()
 
-def print_entry(rule):
-	recursive print_entry
-	print
+    for line in grammar:
+        if line != "\n":
+            line_tokens = line.split()
+
+            if (line_tokens[1],line_tokens[2]) not in R:
+                R[line_tokens[1],line_tokens[2]] = [line_tokens]
+            else:
+                R[line_tokens[1],line_tokens[2]].append(line_tokens)
+
+            if line_tokens[2] not in P:
+                p[line_tokens[2]] = [line_tokens[1]]
+            else:
+                p[line_tokens[2]].append(line_tokens[1])
+    return R,P
+
+def get_S(child,childlist,Sj):
+    childlist.append(child)
+    left_parents = P[child]
+    
+    for parent in left_parents:
+        Sj[parent] = childlist
+        Sj = get_S(parent,childlist,Sj)
+    return Sj
+
+def print_entry(entry):
+    bkpoint1 = entry.bkpointer1
+    bkpoint2 = entry.bkpointer2
+
+    if entry == None:
+        pass
+    print("("+ entry.R[0])
+    
+    print_entry(bkpoinit1.bkpointer2)
+    print_entry(bkpoint2)
+    print(")")
 
 def parse():
 	chart = [[],[],[],[], ...]
