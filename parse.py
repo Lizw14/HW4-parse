@@ -84,7 +84,7 @@ class Chart:
 		return root_list
 
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 def read_grammar(gr_file):
     R = {}
     P = {}
@@ -102,19 +102,27 @@ def read_grammar(gr_file):
                 R[line_tokens[1],line_tokens[2]].append(line_tokens)
 
             if line_tokens[2] not in P:
-                p[line_tokens[2]] = [line_tokens[1]]
+                P[line_tokens[2]] = [line_tokens[1]]
             else:
-                p[line_tokens[2]].append(line_tokens[1])
+                P[line_tokens[2]].append(line_tokens[1])
     return R,P
 
 def get_S(child,childlist,Sj):
     childlist.append(child)
-    left_parents = P[child]
-    
-    for parent in left_parents:
-        Sj[parent] = childlist
-        Sj = get_S(parent,childlist,Sj)
+    if child in P:
+        left_parents = P[child]
+
+        if len(left_parents) > 0:
+            for parent in left_parents:
+                if parent not in Sj:
+                    Sj[parent] = childlist
+
+                    Sj = get_S(parent,childlist,Sj)
+                else:
+                    pass
     return Sj
+
+
 
 def print_entry(entry):
     bkpoint1 = entry.bkpointer1
@@ -127,16 +135,7 @@ def print_entry(entry):
     print_entry(bkpoinit1.bkpointer2)
     print_entry(bkpoint2)
     print(")")
-=======
-def read_grammar(file):
-	return R, P
-
-def get_S(word):
-
-def print_entry(rule):
-	recursive print_entry
-	print
->>>>>>> 788d28ea562c3d1e2975d1648297ad1a825feb0b
+#>>>>>>> 788d28ea562c3d1e2975d1648297ad1a825feb0b
 
 def parse(sentence):
 	chart = Chart()
