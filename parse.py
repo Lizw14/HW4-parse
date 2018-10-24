@@ -39,7 +39,7 @@ class Chart:
 		self.customer_index.append({})
 
 	def attach(self, column_idx, entry):
-		print('attaching: '+ entry.print_entry())
+		#print('attaching: '+ entry.print_entry())
 		for idx, old_entry in enumerate(self.customer_index[entry.start][entry.Rule[0]]):
 			new_entry = copy.copy(old_entry)
 			new_entry.bkpointer1 = old_entry
@@ -47,7 +47,7 @@ class Chart:
 			new_entry.dot += 1
 			new_entry.weight = entry.weight + old_entry.weight
 			self.chart[column_idx].append(new_entry)
-			print('attach add: '+ new_entry.print_entry())
+			#print('attach add: '+ new_entry.print_entry())
 			if new_entry.dot < len(new_entry.Rule):
 				after_dot = new_entry.Rule[new_entry.dot]
 				if after_dot not in self.customer_index[column_idx]:
@@ -57,7 +57,7 @@ class Chart:
 
 	def predict(self, column_idx, entry):
 		after_dot = entry.Rule[entry.dot]
-		print('predicting: '+ entry.print_entry())
+		#print('predicting: '+ entry.print_entry())
 		if after_dot not in self.exist_rule:
 			for non_terminal in self.S.get(after_dot, []):
 				for rule in R.get((after_dot, non_terminal), []):
@@ -68,7 +68,7 @@ class Chart:
 						self.customer_index[column_idx][new_after_dot] = [new_entry]
 					else:
 						self.customer_index[column_idx][new_after_dot].append(new_entry)
-					print('predict add: '+ new_entry.print_entry())
+					#print('predict add: '+ new_entry.print_entry())
 			self.exist_rule.add(after_dot)
 
 	def scan(self, column_idx, entry, word):
@@ -79,22 +79,22 @@ class Chart:
 			new_entry = copy.copy(entry)
 			new_entry.dot += 1 
 			new_entry.bkpointer1 = entry
-			new_entry.bkpointer2 = None
+			new_entry.bkpointer2 = word
 			self.chart[column_idx+1].append(new_entry)
 			#self.exist_rule_next.add(new_entry.Rule[entry.dot])
 			if after_dot not in self.customer_index[column_idx+1]:
 				self.customer_index[column_idx+1][after_dot] = [new_entry]
 			else:
 				self.customer_index[column_idx+1][after_dot].append(new_entry)
-		print('scan: '+ new_entry.print_entry())
+		#print('scan: '+ new_entry.print_entry())
 
 
 	def process_column(self, column_idx, word):
-		print('processing column '+str(column_idx))
+		#print('processing column '+str(column_idx))
 		self.S = get_S(word, [], {})
 		count = 0
 		while count < len(self.chart[column_idx]):
-			print('current entry: '+str(count)+'/'+str(len(self.chart[column_idx])))
+			#print('current entry: '+str(count)+'/'+str(len(self.chart[column_idx])))
 			entry = self.chart[column_idx][count]
 			if entry.dot == len(entry.Rule):
 				if entry.Rule[0] != 'ROOT':
@@ -167,15 +167,19 @@ def print_entry(entry, out_string):
 
     if entry == None:
         return ''
-    bkpoint1 = entry.bkpointer1
-    bkpoint2 = entry.bkpointer2
-    out_string += ("("+ entry.Rule[0])
+    elif isinstance(entry, basestring):
+        out_string += ("("+ entry + ")")
+        return out_string
+    else:
+        bkpoint1 = entry.bkpointer1
+        bkpoint2 = entry.bkpointer2
+        out_string+= ("("+ entry.Rule[0])
 
-    print (entry.print_entry())
+        print (entry.print_entry())
     
-    out_string += print_entry(bkpoint1.bkpointer2, out_string)
-    out_string += print_entry(bkpoint2, out_string)
-    out_string += ')'
+        print_entry(bkpoint1.bkpointer2, out_string)
+        print_entry(bkpoint2, out_string)
+        out_string+= ')'
     return out_string
 
 def parse(sentence):
@@ -200,11 +204,11 @@ def parse(sentence):
 	print out_string
 
 def main():
-	R, P, RootEntries, NonTerminal = read_grammar('/Users/lizw/Downloads/hw-parse/papa.gr')
-	print R
-	print P
-	print RootEntries
-	print NonTerminal
+	R, P, RootEntries, NonTerminal = read_grammar('/usr/local/data/cs465/hw-parse/papa.gr')
+	#print R
+	#print P
+	#print RootEntries
+	#print NonTerminal
 	sentence = 'Papa ate the caviar with a spoon'.strip().split()
 	parse(sentence)
 
