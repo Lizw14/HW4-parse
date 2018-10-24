@@ -166,20 +166,19 @@ def get_S(child, childlist, Sj):
 def print_entry(entry, out_string):
 
     if entry == None:
-        return ''
+        pass
     elif isinstance(entry, basestring):
-        out_string += ("("+ entry + ")")
-        return out_string
+        out_string.append("("+ entry + ")")
     else:
         bkpoint1 = entry.bkpointer1
         bkpoint2 = entry.bkpointer2
-        out_string+= ("("+ entry.Rule[0])
+        out_string.append("("+ entry.Rule[0])
 
         print (entry.print_entry())
     
         print_entry(bkpoint1.bkpointer2, out_string)
         print_entry(bkpoint2, out_string)
-        out_string+= ')'
+        out_string.append(")")
     return out_string
 
 def parse(sentence):
@@ -200,8 +199,8 @@ def parse(sentence):
 	for entry in root_list:
 		if entry.weight < min_entry.weight:
 			min_entry = entry
-	out_string = print_entry(min_entry, '')
-	print out_string
+	out_string = print_entry(min_entry, [])
+	print("".join(out_string))
 
 def main():
 	R, P, RootEntries, NonTerminal = read_grammar('/usr/local/data/cs465/hw-parse/papa.gr')
