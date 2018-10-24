@@ -39,7 +39,7 @@ class Chart:
 		self.customer_index.append({})
 
 	def attach(self, column_idx, entry):
-		#print('attaching: '+ entry.print_entry())
+		print('attaching: '+ entry.print_entry())
 		for idx, old_entry in enumerate(self.customer_index[entry.start][entry.Rule[0]]):
 			new_entry = copy.copy(old_entry)
 			new_entry.bkpointer1 = old_entry
@@ -181,7 +181,7 @@ def print_entry(entry, out_string):
         out_string.append(")")
     return out_string
 
-def parse(sentence):
+def parse(sentence,output):
 	earley = Chart()
 	earley.create_column()
 	earley.chart[0].extend(RootEntries)
@@ -200,16 +200,23 @@ def parse(sentence):
 		if entry.weight < min_entry.weight:
 			min_entry = entry
 	out_string = print_entry(min_entry, [])
-	print("".join(out_string))
+	output.write("".join(out_string))
 
 def main():
-	R, P, RootEntries, NonTerminal = read_grammar('/usr/local/data/cs465/hw-parse/papa.gr')
-	#print R
+        
+	R, P, RootEntries, NonTerminal = read_grammar('/usr/local/data/cs465/hw-parse/wallstreet.gr')
+        output = open("parse_result","w")
+	print R
 	#print P
 	#print RootEntries
 	#print NonTerminal
-	sentence = 'Papa ate the caviar with a spoon'.strip().split()
-	parse(sentence)
+        sentences = open("/usr/local/data/cs465/hw-parse/wallstreet.sen","r")
+        for sentence in sentences:
+            print(sentence)
+            tokens = sentence.strip().split()
+	    parse(tokens,output)
+
+        output.close()
 
 if __name__=="__main__":
 	main()
