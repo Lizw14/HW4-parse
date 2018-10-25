@@ -159,7 +159,7 @@ class Chart:
 
 
 	def process_column(self, column_idx, word):
-		print('#processing column '+str(column_idx))
+		#print('#processing column '+str(column_idx))
 		self.S = get_S(word, [], {})
                 self.possible_entry = set([item for sublist in self.S.viewvalues() for item in sublist])
                 self.possible_entry.add(word)
@@ -167,8 +167,8 @@ class Chart:
 		count = 0
 		while count < len(self.chart[column_idx]):
 			entry = self.chart[column_idx][count]
-                        if count % 1000 == 0:
-                            print('#current entry in column '+str(column_idx)+': '+str(count)+'/'+str(len(self.chart[column_idx]))+entry.print_entry())
+                        #if count % 1000 == 0:
+                        #    print('#current entry in column '+str(column_idx)+': '+str(count)+'/'+str(len(self.chart[column_idx]))+entry.print_entry())
 			if entry.dot == len(entry.Rule):
 				if entry.Rule[0] != 'ROOT':
 					self.attach(column_idx, entry, count)
@@ -177,7 +177,7 @@ class Chart:
 			else:
 				self.predict(column_idx, entry)
 			count += 1
-                print('# column '+str(column_idx))
+                #print('# column '+str(column_idx))
                 #for entry in self.chart[column_idx]:
                 #    if entry is not None:
                 #        print('# ' + entry.print_entry())
@@ -187,7 +187,7 @@ class Chart:
                 #    print('# ' + str(duplicate))
 
 	def process_last_column(self, column_idx):
-		print('#processing column '+str(column_idx))
+		#print('#processing column '+str(column_idx))
 		count = 0
 		root_list = []
 		while count < len(self.chart[column_idx]):
@@ -198,8 +198,8 @@ class Chart:
 				else:
 					self.attach(column_idx, entry, count)
 			count += 1
-                for rule in root_list:
-                    print('# root_list: '+rule.print_entry())
+                #for rule in root_list:
+                    #print('# root_list: '+rule.print_entry())
 		return root_list
 
 
@@ -258,7 +258,7 @@ def print_entry(entry, out_string):
         bkpoint2 = entry.bkpointer2
         out_string.append("("+ entry.Rule[0])
 
-        print ('# '+entry.print_entry())
+        #print ('# '+entry.print_entry())
     
         print_entry(bkpoint1.bkpointer2, out_string)
         print_entry(bkpoint2, out_string)
@@ -267,7 +267,7 @@ def print_entry(entry, out_string):
 
 def parse(sentence,output):
 	earley = Chart(len(sentence))
-        print('# len sentence:' +str(len(sentence)))
+        #print('# len sentence:' +str(len(sentence)))
 	#earley.create_column()
 	earley.chart[0].extend(RootEntries)
 	for entry in RootEntries:
@@ -282,7 +282,7 @@ def parse(sentence,output):
 	root_list = earley.process_last_column(len(sentence))
         if len(root_list) == 0:
             print('NONE')
-            output.write('NONE\n')
+        #    output.write('NONE\n')
         else:
 	    min_entry = root_list[0]
 	    for entry in root_list:
@@ -291,24 +291,25 @@ def parse(sentence,output):
 	    out_string = print_entry(min_entry, [])
             print ''.join(out_string)
             print min_entry.weight
-	    output.write("".join(out_string)+'\n')
-            output.write(str(min_entry.weight)+'\n')
+	    #output.write("".join(out_string)+'\n')
+            #output.write(str(min_entry.weight)+'\n')
 
 def main(argv):
 	R, P, RootEntries, NonTerminal = read_grammar(argv[1])
-        output = open("parse_result","w")
-	#print ('# '+str(len(R))+str(R))
+        #output = open("parse_result","w")
+	output = None
+        #print ('# '+str(len(R))+str(R))
 	#print ('# '+str(len(P))+str(P))
 	#print ('# '+str(RootEntries))
 	#print ('# '+str(len(NonTerminal)))
         sentences = open(argv[2],"r")
         for sentence in sentences:
             tokens = sentence.strip().split()
-            print('# sentence: '+sentence)
+            #print('# sentence: '+sentence)
             if len(tokens)>0:
 	        parse(tokens,output)
 
-        output.close()
+        #output.close()
 
 if __name__=="__main__":
 	main(sys.argv)
