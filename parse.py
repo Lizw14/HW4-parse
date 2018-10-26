@@ -250,19 +250,61 @@ def get_S(child, childlist, Sj):
 def print_entry(entry, out_string):
 
     if entry == None:
-        pass
+        return out_string
     elif isinstance(entry, basestring):
-        out_string.append("("+ entry + ")")
+        out_string.append( entry )
+        return out_string
     else:
         bkpoint1 = entry.bkpointer1
         bkpoint2 = entry.bkpointer2
-        out_string.append("("+ entry.Rule[0])
+        if bkpoint1 ==None:
+            return out_string
+        else:
+            if bkpoint1.Rule[bkpoint1.dot-1] not in NonTerminal:
+                print_entry(bkpoint1.bkpointer1, out_string)
+                out_string.append(bkpoint1.Rule[bkpoint1.dot-1])
+                #print(out_string)
+                #if isinstance(bkpoint2, basestring):
+                #    out_string.append(bkpoint2)
+                #elif bkpoint2==None:
+                 #   return out_string
+                #else:
+                    #out_string.append("("+ bkpoint2.Rule[bkpoint2.dot-1])
+                 #   print_entry(bkpoint2, out_string)
+               # out_string.append(")")
+                #return out_string
+            else:
+                out_string.append("("+ bkpoint1.Rule[bkpoint1.dot-1])
+                #print(out_string)
+                print_entry(bkpoint1, out_string)
+                #outstring = []
+                #if isinstance(bkpoint2, basestring):
+                 #   out_string.append(bkpoint2)                    
+                  #  print(out_string)
+                #elif bkpoint2==None:
+                 #   print ('# '+entry.print_entry())                    
+                  #  return out_string
+                #else:
+                    #out_string.append("("+ bkpoint2.Rule[bkpoint2.dot-1]) 
+                 #   print_entry(bkpoint2, out_string)
+                #out_string.append(")")
+               # return out_string
 
-        print ('# '+entry.print_entry())
-    
-        print_entry(bkpoint1.bkpointer2, out_string)
-        print_entry(bkpoint2, out_string)
-        out_string.append(")")
+    #print ('# '+entry.print_entry())
+        if isinstance(bkpoint2, basestring):
+            out_string.append(bkpoint2)
+            return out_string
+        #print(out_string) 
+        elif bkpoint2==None:
+        #print ('# '+entry.print_entry())
+            return out_string
+        else:
+            #out_string.append("("+ bkpoint2.Rule[bkpoint2.dot-1]) 
+            print_entry(bkpoint2, out_string)
+        #out_string.append(")")
+
+    #print_entry(bkpoint2, out_string)
+    out_string.append(")")
     return out_string
 
 def parse(sentence,output):
