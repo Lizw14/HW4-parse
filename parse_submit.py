@@ -252,13 +252,18 @@ def print_entry(entry, out_string):
     if entry == None:
         pass
     elif isinstance(entry, basestring):
-        out_string.append("("+ entry + ")")
+        out_string.append(entry)
+    	#print ('# '+entry)
     else:
+    	#print ('# '+entry.print_entry())
         bkpoint1 = entry.bkpointer1
         bkpoint2 = entry.bkpointer2
-        out_string.append("("+ entry.Rule[0])
+        out_string.append("("+ entry.Rule[0]+' ')
 
+<<<<<<< HEAD
         print ('# '+entry.print_entry())
+=======
+>>>>>>> dcf7fe86aebe85aef3d02c16d242e8a7ae4335e2
     
         print_entry(bkpoint1.bkpointer2, out_string)
         print_entry(bkpoint2, out_string)
