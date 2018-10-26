@@ -250,25 +250,89 @@ def get_S(child, childlist, Sj):
 def print_entry(entry, out_string):
 
     if entry == None:
-        pass
+        return out_string
     elif isinstance(entry, basestring):
-        out_string.append(entry)
-    	#print ('# '+entry)
+        out_string.append( entry + ' ')
+        return out_string
     else:
-    	#print ('# '+entry.print_entry())
         bkpoint1 = entry.bkpointer1
         bkpoint2 = entry.bkpointer2
-        out_string.append("("+ entry.Rule[0]+' ')
+        if bkpoint1 ==None:
+            return out_string
+        else:
+            if bkpoint1.Rule[bkpoint1.dot-1] not in NonTerminal:
+                print_entry(bkpoint1.bkpointer1, out_string)
+                out_string.append(bkpoint1.Rule[bkpoint1.dot-1]+' ')
+                #print(out_string)
+                #if isinstance(bkpoint2, basestring):
+                #    out_string.append(bkpoint2)
+                #elif bkpoint2==None:
+                 #   return out_string
+                #else:
+                    #out_string.append("("+ bkpoint2.Rule[bkpoint2.dot-1])
+                 #   print_entry(bkpoint2, out_string)
+               # out_string.append(")")
+                #return out_string
+            else:
+                out_string.append("("+ bkpoint1.Rule[bkpoint1.dot-1]+' ')
+                #print(out_string)
+                print_entry(bkpoint1, out_string)
+                #outstring = []
+                #if isinstance(bkpoint2, basestring):
+                 #   out_string.append(bkpoint2)                    
+                  #  print(out_string)
+                #elif bkpoint2==None:
+                 #   print ('# '+entry.print_entry())                    
+                  #  return out_string
+                #else:
+                    #out_string.append("("+ bkpoint2.Rule[bkpoint2.dot-1]) 
+                 #   print_entry(bkpoint2, out_string)
+                #out_string.append(")")
+               # return out_string
 
-<<<<<<< HEAD
-        print ('# '+entry.print_entry())
-=======
->>>>>>> dcf7fe86aebe85aef3d02c16d242e8a7ae4335e2
-    
-        print_entry(bkpoint1.bkpointer2, out_string)
-        print_entry(bkpoint2, out_string)
-        out_string.append(")")
+    #print ('# '+entry.print_entry())
+        if isinstance(bkpoint2, basestring):
+            out_string.append(bkpoint2+' ')
+            return out_string
+        #print(out_string) 
+        elif bkpoint2==None:
+        #print ('# '+entry.print_entry())
+            return out_string
+        else:
+            #out_string.append("("+ bkpoint2.Rule[bkpoint2.dot-1]) 
+            print_entry(bkpoint2, out_string)
+        #out_string.append(")")
+
+    #print_entry(bkpoint2, out_string)
+    #if out_string[-1][-1] != ' ':
+    out_string.append(")")
+    #else:
+    #    out_string.append("\b)")
     return out_string
+
+def print_entry_1(entry, out_string):
+    if entry is None:
+        return out_string
+    elif isinstance(entry, basestring):
+        #print(entry)
+        out_string.append(entry+' ')
+        return out_string
+    elif entry.dot == len(entry.Rule):
+        #print(entry.print_entry())
+        out_string.append('('+entry.Rule[0]+' ')
+        out_string = print_entry_1(entry.bkpointer1, out_string)
+        out_string = print_entry_1(entry.bkpointer2, out_string)
+        out_string.append(')')
+        return out_string
+    else:
+        #print(entry.print_entry())
+        out_string = print_entry_1(entry.bkpointer1, out_string)
+        out_string = print_entry_1(entry.bkpointer2, out_string)
+        return out_string
+
+#def process_string(str_list):
+#    for idx, s in enumerate(str_list):
+#        if 
 
 def parse(sentence,output):
 	earley = Chart(len(sentence))
@@ -293,7 +357,7 @@ def parse(sentence,output):
 	    for entry in root_list:
 		    if entry.weight < min_entry.weight:
 			    min_entry = entry
-	    out_string = print_entry(min_entry, [])
+	    out_string = print_entry_1(min_entry, [])
             print ''.join(out_string)
             print min_entry.weight
 	    #output.write("".join(out_string)+'\n')
