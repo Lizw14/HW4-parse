@@ -258,7 +258,7 @@ def print_entry(entry, out_string):
         bkpoint2 = entry.bkpointer2
         out_string.append("("+ entry.Rule[0])
 
-        #print ('# '+entry.print_entry())
+        print ('# '+entry.print_entry())
     
         print_entry(bkpoint1.bkpointer2, out_string)
         print_entry(bkpoint2, out_string)
