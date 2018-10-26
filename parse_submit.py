@@ -67,8 +67,7 @@ class Chart:
 		    #print('# attaching new entry: '+ new_entry.print_entry())
 
                     flag = 1
-                    for index in self.duplicate_dict.get((new_entry.start, new_entry.dot),[]):
-                        if self.chart[column_idx][index].Rule == new_entry.Rule:
+                    for index in self.duplicate_dict.get((new_entry.start, new_entry.dot, new_entry.Rule),[]):
                             #print('# duplicate '+str(index) + ' '+str(current_count)+self.chart[column_idx][index].print_entry())
                             if self.chart[column_idx][index].weight <= new_entry.weight:
                                 #print('# attaching duplicate with higher weight')
@@ -86,7 +85,7 @@ class Chart:
                                     after_dot = new_entry.Rule[new_entry.dot]
                                     self.customer_index[column_idx][after_dot].remove(self.chart[column_idx][index])
                                 self.chart[column_idx][index] = None
-                                self.duplicate_dict[new_entry.start, new_entry.dot].remove(index)
+                                self.duplicate_dict[new_entry.start, new_entry.dot, new_entry.Rule].remove(index)
 
 
                     #duplicate = self.check_duplicate(new_entry)
@@ -101,10 +100,10 @@ class Chart:
 	                        self.customer_index[column_idx][after_dot] = [new_entry]
 	                    else:
 	                        self.customer_index[column_idx][after_dot].append(new_entry)
-                        if (new_entry.start, new_entry.dot) not in self.duplicate_dict:
-                            self.duplicate_dict[new_entry.start, new_entry.dot] = [len(self.chart[column_idx])-1]
+                        if (new_entry.start, new_entry.dot, new_entry.Rule) not in self.duplicate_dict:
+                            self.duplicate_dict[new_entry.start, new_entry.dot, new_entry.Rule] = [len(self.chart[column_idx])-1]
                         else:
-                            self.duplicate_dict[new_entry.start, new_entry.dot].append(len(self.chart[column_idx])-1)
+                            self.duplicate_dict[new_entry.start, new_entry.dot, new_entry.Rule].append(len(self.chart[column_idx])-1)
                     #else:
                     #    if column_idx < self.length:
                     #        return
@@ -214,10 +213,10 @@ def read_grammar(gr_file):
             line_tokens = line.split()
 
             if (line_tokens[1],line_tokens[2]) not in R:
-                R[line_tokens[1],line_tokens[2]] = [[-math.log(float(line_tokens[0]), 2), line_tokens[1:]]]
+                R[line_tokens[1],line_tokens[2]] = [[-math.log(float(line_tokens[0]), 2), tuple(line_tokens[1:])]]
                 NonTerminal.add(line_tokens[1])
             else:
-                R[line_tokens[1],line_tokens[2]].append([-math.log(float(line_tokens[0]), 2), line_tokens[1:]])
+                R[line_tokens[1],line_tokens[2]].append([-math.log(float(line_tokens[0]), 2), tuple(line_tokens[1:])])
 
             if line_tokens[2] not in P:
                 P[line_tokens[2]] = [line_tokens[1]]
@@ -225,7 +224,7 @@ def read_grammar(gr_file):
                 P[line_tokens[2]].append(line_tokens[1])
 
             if line_tokens[1] == 'ROOT':
-            	RootEntries.append(Entry(line_tokens[1:], -math.log(float(line_tokens[0]), 2)))
+            	RootEntries.append(Entry(tuple(line_tokens[1:]), -math.log(float(line_tokens[0]), 2)))
 
     grammar.close()
     return R, P, RootEntries, NonTerminal
